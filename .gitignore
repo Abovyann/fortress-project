@@ -1,0 +1,19 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+
+# Ansible
+*.retry
+ansible/inventory.ini
+ansible/secrets.yml  
+
+# SSH Keys
+fortress_tf_key
+fortress_tf_key.pub
+*.pem
+
+# Info
+info.txt

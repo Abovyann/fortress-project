@@ -1,0 +1,15 @@
+---
+- name: "Configure Base Server Settings"
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: "Update apt cache and upgrade packages"
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: "Install essential troubleshooting tools"
+      apt:
+        name: [curl, wget, git, htop, vim, nano]
+        state: present
