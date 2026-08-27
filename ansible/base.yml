@@ -1,6 +1,7 @@
 ---
 - name: "Configure Base Server Settings"
   hosts: all
+  serial: 1
   become: yes
 
   tasks:
@@ -13,3 +14,44 @@
       apt:
         name: [curl, wget, git, htop, vim, nano]
         state: present
+
+    - name: "Install Security Packages"
+      apt:
+        name: [ufw, fail2ban]
+        state: present
+
+    - name: Disable root login
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PermitRootLogin'
+        line: 'PermitRootLogin no'
+      notify: "Restart SSH"
+
+    - name: Disable password authentication
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^#?PasswordAuthentication'
+        line: 'PasswordAuthentication no'
+      notify: "Restart SSH"
+
+    - name: Configure UFW
+      ufw:
+        rule: allow
+        name: OpenSSH
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
+
+    - name: Start and Enable fail2ban
+      systemd:
+        name: fail2ban
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: Restart SSH
+      systemd:
+        name: ssh
+        state: restarted

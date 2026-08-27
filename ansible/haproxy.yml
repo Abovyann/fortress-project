@@ -21,6 +21,15 @@
         name: haproxy
         state: started 
 
+    - name: "Allow HTTP/HTTPS through UFW"
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop:
+        - '80'
+        - '443'
+        
   handlers:
     - name: "Restart HAProxy"
       systemd:

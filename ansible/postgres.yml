@@ -14,7 +14,12 @@
         name: postgresql
         state: started
         enabled: yes
-  
+
+    - name: "Allow PostgreSQL through UFW"
+      ufw:
+        rule: allow
+        port: '5432'
+        proto: tcp
 
 
 - name: "Configure primary database"
