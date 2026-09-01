@@ -14,6 +14,10 @@ defaults
 
 frontend http_front
     bind *:80
+    bind *:443 ssl crt /etc/haproxy/certs/{{ ansible_host }}.nip.io.pem
+    
+    redirect scheme https code 301 if !{ ssl_fc }
+    
     default_backend web_servers
 
 backend web_servers
