@@ -1,0 +1,29 @@
+---
+- name: 
+  hosts: db_primary
+  become: yes
+
+  tasks:
+    - name: "Install AWS CLI"
+      snap:
+        name: aws-cli
+        classic: yes
+
+    - name: "Create a directory for scripts"
+      file:
+        path: /opt/scripts
+        state: directory
+
+    - name: "Copy the script to the server"
+      copy:
+        src: files/backup.sh
+        dest: /opt/scripts/backup.sh
+        mode: '0755'
+
+    - name: "Schedule the Cron Job"
+      cron:
+        name: "Nightly Postgres S3 backup"
+        minute: "0"
+        hour: "2"
+        job: "/opt/scripts/backup.sh"
+        user: root

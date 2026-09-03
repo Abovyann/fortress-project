@@ -14,9 +14,12 @@ defaults
 
 frontend http_front
     bind *:80
-    bind *:443 ssl crt /etc/haproxy/certs/{{ ansible_host }}.nip.io.pem
     
+    {% if ssl_cert_file.stat.exists %}
+    # Only load HTTPS if the certificate file actually exists!
+    bind *:443 ssl crt /etc/haproxy/certs/{{ ansible_host }}.nip.io.pem
     redirect scheme https code 301 if !{ ssl_fc }
+    {% endif %}
     
     default_backend web_servers
 
