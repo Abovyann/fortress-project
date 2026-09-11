@@ -4,10 +4,28 @@
   become: yes
 
   tasks:
-    - name: "Install AWS CLI"
-      snap:
-        name: aws-cli
-        classic: yes
+    - name: "Install unzip (required for AWS CLI)"
+      apt:
+        name: unzip
+        state: present
+
+    - name: "Download and extract AWS CLI v2"
+      unarchive:
+        src: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "/tmp"
+        remote_src: yes
+
+    - name: "Run the AWS CLI installer"
+      command: /tmp/aws/install --update
+
+    - name: "Download and extract AWS CLI v2"
+      unarchive:
+        src: "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
+        dest: "/tmp"
+        remote_src: yes
+
+    - name: "Run the AWS CLI installer"
+      command: /tmp/aws/install --update
 
     - name: "Create a directory for scripts"
       file:

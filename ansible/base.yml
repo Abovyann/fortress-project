@@ -15,9 +15,9 @@
         name: [curl, wget, git, htop, vim, nano]
         state: present
 
-    - name: "Install Security Packages"
+    - name: "Install Security and Monitoring Packages"
       apt:
-        name: [ufw, fail2ban]
+        name: [ufw, fail2ban, prometheus-node-exporter]
         state: present
 
     - name: Disable root login
@@ -49,6 +49,13 @@
         name: fail2ban
         state: started
         enabled: yes
+
+    - name: "Allow Node Exporter through UFW from internal VPC"
+      ufw:
+        rule: allow
+        port: '9100'
+        proto: tcp
+        src: '10.0.0.0/16'
 
   handlers:
     - name: Restart SSH
