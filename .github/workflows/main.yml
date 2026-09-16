@@ -27,24 +27,24 @@ jobs:
 
 # JOB 2: CONTINUOUS DEPLOYMENT
 
-deploy-to-aws:
-  needs: syntax-check
-  runs-on: ubuntu-latest
-  env:
-    ANSIBLE_HOST_KEY_CHECKING: "False"
+  deploy-to-aws:
+    needs: syntax-check
+    runs-on: ubuntu-latest
+    env:
+      ANSIBLE_HOST_KEY_CHECKING: "False"
 
-  steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       
-    - name: Install Ansible
-      run: sudo apt update && sudo apt install -y ansible
+      - name: Install Ansible
+        run: sudo apt update && sudo apt install -y ansible
       
-    - name: Setup SSH Key and Inventory
-      run:
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
-        chmod 400 key.pem
-        echo "${{ secrets.ANSIBLE_INVENTORY }}" > inventory.ini
+      - name: Setup SSH Key and Inventory
+        run:
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+          chmod 400 key.pem
+          echo "${{ secrets.ANSIBLE_INVENTORY }}" > inventory.ini
 
-    - name: DeployWeb Tier
-      run: ansible-playbook -i inventory.ini ansible/web.yml
+      - name: DeployWeb Tier
+        run: ansible-playbook -i inventory.ini ansible/web.yml
