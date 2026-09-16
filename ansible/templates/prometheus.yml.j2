@@ -1,21 +1,15 @@
+global:
+  scrape_interval: 15s
+
 rule_files:
   - '/etc/prometheus/alert.rules.yml'
 
 alerting:
   alertmanagers:
     - static_configs:
-        - targets:
-          - 'localhost:9093'
-
-global:
-  scrape_interval: 15s
+        - targets: ['localhost:9093']
 
 scrape_configs:
   - job_name: 'fortress_nodes'
     static_configs:
-      - targets:
-        - 'localhost:9100'
-        
-        {% for host in groups['private_nodes'] %}
-        - '{{ hostvars[host]['ansible_host'] }}:9100'
-        {% endfor %}
+      - targets: ['localhost:9100'{% for host in groups['private_nodes'] %}, '{{ hostvars[host]['ansible_host'] }}:9100'{% endfor %}]

@@ -4,7 +4,7 @@
   become: yes
   vars:
     domain_name: "{{ ansible_host }}.nip.io"
-    letsencrypt_email: "abovyan.narek.03@gmail.com"  # <--- CHANGE THIS
+    letsencrypt_email: "abovyan.narek.03@gmail.com"
 
   tasks:
     - name: "Install Certbot"

@@ -251,12 +251,10 @@ output "db_replica_ip" {
   value = aws_instance.db_replica.private_ip
 }
 
-# 1. The S3 Bucket
 resource "aws_s3_bucket" "db_backups" {
   bucket = "fortress-db-backups-narek-2026" # <--- Must match your script!
 }
 
-# 2. The IAM Role (Allows EC2 to assume this identity)
 resource "aws_iam_role" "ec2_s3_role" {
   name = "fortress_ec2_s3_role"
 
@@ -274,13 +272,11 @@ resource "aws_iam_role" "ec2_s3_role" {
   })
 }
 
-# 3. The IAM Policy (Gives the Role permission to write to S3)
 resource "aws_iam_role_policy_attachment" "s3_access" {
   role       = aws_iam_role.ec2_s3_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
-# 4. The Instance Profile (The "glue" that attaches the Role to an EC2 instance)
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "fortress_ec2_profile"
   role = aws_iam_role.ec2_s3_role.name

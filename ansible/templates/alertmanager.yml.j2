@@ -1,9 +1,10 @@
 route:
   receiver: 'discord'
+  group_by: ['alertname']
 
 receivers:
   - name: 'discord'
-    slack_configs:
-      - api_url: '{{ discord_webhook }}'
-        title: '{% raw %}[{{ .Status | toUpper }}] SERVER ALERT{% endraw %}'
-        text: '{% raw %}The server at {{ .GroupLabels.instance }} has gone offline!{% endraw %}'
+    discord_configs:
+      - webhook_url: '{{ discord_webhook }}'
+        title: '{% raw %}[{{ .Status | toUpper }}] {{ .GroupLabels.alertname }}{% endraw %}'
+        message: '{% raw %}A server is offline! IP Address: {{ .CommonLabels.instance }}{% endraw %}'
